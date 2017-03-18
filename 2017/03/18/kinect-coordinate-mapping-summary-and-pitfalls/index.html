@@ -13,11 +13,11 @@
 
     <title>
         
-          Hello World - Elon&#39;s Blogs
+          Kinect Coordinate Mapping: Summary and Pitfalls - Elon&#39;s Blogs
         
     </title>
 
-    <link rel="canonical" href="https://elonliu.github.io/2017/03/16/hello-world/">
+    <link rel="canonical" href="https://elonliu.github.io/2017/03/18/kinect-coordinate-mapping-summary-and-pitfalls/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -155,7 +155,7 @@
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
-        background-image: url('//on02twadg.bkt.clouddn.com/posters.d.jpg')
+        background-image: url('http://on02twadg.bkt.clouddn.com/kinect.jpg')
     }
 </style>
 <header class="intro-header" >
@@ -165,12 +165,20 @@
                 <div class="post-heading">
                     <div class="tags">
                         
+                          <a class="tag" href="/tags/#Computer Graphics" title="Computer Graphics">Computer Graphics</a>
+                        
+                          <a class="tag" href="/tags/#Computer Vision" title="Computer Vision">Computer Vision</a>
+                        
+                          <a class="tag" href="/tags/#Kinect" title="Kinect">Kinect</a>
+                        
+                          <a class="tag" href="/tags/#Programming" title="Programming">Programming</a>
+                        
                     </div>
-                    <h1>Hello World</h1>
+                    <h1>Kinect Coordinate Mapping: Summary and Pitfalls</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by Elon Liu on
-                        2017-03-16
+                        2017-03-18
                     </span>
                 </div>
             </div>
@@ -189,15 +197,55 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+                <p>I’m using <a href="https://www.microsoft.com/en-us/kinectforwindows/" target="_blank" rel="external">Microsoft Kinect</a> for some face tracking applications, and coordinate mapping is often inevitable. However, I found that <a href="https://msdn.microsoft.com/en-us/library/dn799271.aspx" target="_blank" rel="external">the official document</a> is quite simple and confusing. Here I will summarize what I figured out while trying to use it. Hopefully it makes things more clear.</p>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>Note: This post addresses <a href="https://www.microsoft.com/en-us/kinectforwindows/" target="_blank" rel="external">Kinect for Windows v2</a> and its c++ API in <a href="http://www.microsoft.com/en-us/download/details.aspx?id=44561" target="_blank" rel="external">SDK 2.0</a>. The conclusions may not apply to previous generation of Kinect or c# API or later version of SDK.</p>
+<p>There are three coordinate spaces when dealing with Kinect camera.</p>
+<h3 id="World-Space"><a href="#World-Space" class="headerlink" title="World Space"></a>World Space</h3><p><img src="https://i-msdn.sec.s-msft.com/dynimg/IC757720.png" alt="World coordinate definition."></p>
+<p>Addressed as “camera space” in the official document, it is actually the 3D world space.</p>
+<ul>
+<li><strong>Origin</strong>: Center of the IR sensor (Not center of the color camera)</li>
+<li><strong>Coordinate frame</strong>: Right-handed. y axis grows up, z axis grows out towards objects.</li>
+<li><strong>Unit</strong>: Meter (Not millimeter)</li>
+</ul>
+<h3 id="Depth-Space"><a href="#Depth-Space" class="headerlink" title="Depth Space"></a>Depth Space</h3><p>Space of depth image. Each pixel on depth image has a depth value.</p>
+<ul>
+<li><strong>Origin</strong>: Left-top corner</li>
+<li><strong>Coordinate axes</strong>: x axis grows to the right; y axis grows down</li>
+<li><strong>Range</strong>: Resolution is $512 \times 424$. Therefore $x \in [0, 511]$, $ y \in [0, 423]$</li>
+<li><strong>Depth value</strong>: Depth value of each pixel is in millimeters. Valid depth range is 500 mm to 4500 mm. API retrieved array are row-major stored.</li>
+</ul>
+<h3 id="Color-Space"><a href="#Color-Space" class="headerlink" title="Color Space"></a>Color Space</h3><p>Space of color image. Each pixel on color image has a color value.</p>
+<ul>
+<li><strong>Origin</strong>: Left-top corner</li>
+<li><strong>Coordinate axes</strong>: x axis grows to the right; y axis grows down</li>
+<li><strong>Range</strong>: Resolution $1920 \times 1080$ (full HD 1080p). Therefore $x \in [0, 1919]$, $y \in [0, 1079]$</li>
+<li><strong>Color value</strong>: The color value directly retrieved from API is stored in <code>BGRX</code> format. Four bytes for each pixel, and the X channel is reserved and always <code>0xff</code>. The data array are row-major stored, which can be directly mapped to OpenCV <code>cv::Mat</code> with <code>CV_8UC4</code> format.</li>
+</ul>
+<blockquote>
+<p><strong>Pitfall 1. </strong><br>The image in depth space and color space are different from common camera: they are horizontally mirrored. That is, if using a simple pin-hole camera matrix to model, the 2nd row of camera matrix should be negative.</p>
+</blockquote>
+<h2 id="Coordinate-Mapping"><a href="#Coordinate-Mapping" class="headerlink" title="Coordinate Mapping"></a>Coordinate Mapping</h2><h3 id="Using-API"><a href="#Using-API" class="headerlink" title="Using API"></a>Using API</h3><p>Coordinates mapping can be done using <a href="https://msdn.microsoft.com/en-us/library/microsoft.kinect.kinect.icoordinatemapper.aspx" target="_blank" rel="external">member methods of <code>ICoordinateMapper</code> class</a> in the SDK. You can map one point, several points or the whole frame. But not all these three types of mappings between every two spaces are available. Specifically, the available mappings are illustrated as below:</p>
+<p><img src="http://on02twadg.bkt.clouddn.com/kinect-api-coord-conv.svg" alt="Kinect API-provided coordinate conversions"></p>
+<blockquote>
+<p><strong>Pitfall 2.</strong><br>Mapping between depth space and color space is related to the depth value. Therefore, if you want to filter depth values, please do it before mapping.</p>
+</blockquote>
+<h3 id="Using-Camera-Matrix"><a href="#Using-Camera-Matrix" class="headerlink" title="Using Camera Matrix"></a>Using Camera Matrix</h3><p>The API functions are not easy to use when you want to build an optimization problem and camera matrix is assembled into your equation. In such cases, you may want to use camera matrix directly.</p>
+<p>Note that you should use depth camera to project 3D points or back-project 2D pixels. Here are the reasons:</p>
+<ol>
+<li>Accurate intrinsic camera parameters of depth camera can be retrieved from SDK API. But it cannot be retrieved for color camera.</li>
+<li>Depth camera is located at the center of the world coordinate. This will make things easier if you are going to cooperate with other features of the SDK and stick to the defined world coordinate system.</li>
+</ol>
+<p>With known camera matrix $P$,<br>$$P =<br>\begin{bmatrix}<br>f_x &amp; &amp; c_x\\<br>&amp; f_y &amp; c_y\\<br>&amp; &amp; 1<br>\end{bmatrix}$$</p>
+<p>projecting a 3D point $\mathbf{v} = (x, y, z)^\top$ to depth space to get a 2D point $\mathbf{u} = (u,v)^\top$ with depth value $d$ is quite easy, because depth value is exactly $z$ value, i.e. $d = z$. Therefore,<br>$$<br>\begin{bmatrix}<br>f_x &amp; &amp; c_x\\<br>&amp; f_y &amp; c_y\\<br>&amp; &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>x \\ y \\ z<br>\end{bmatrix}<br>=<br>\begin{bmatrix}<br>ud\\ vd\\ d<br>\end{bmatrix}<br>$$<br>It’s not hard to get</p>
+<ul>
+<li><p>Projection (3D to 2D)<br>$$\begin{array}{rl}<br>u &amp; = \dfrac{f_x x + c_x z}{z}\\<br>v &amp; = \dfrac{f_y y + c_y z}{z}\\<br>d &amp; = z<br>\end{array}$$</p>
+</li>
+<li><p>Back-projection (2D to 3D)<br>$$\begin{array}{rl}<br>x &amp;= \dfrac{(u - c_x) d}{f_x} \\<br>y &amp;= \dfrac{(v - c_y) d}{f_y} \\<br>z &amp;= d<br>\end{array}$$</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Pitfall 3.</strong><br>The camera matrix above ignores radial distortion, while mapping functions in the SDK API don’t. So you may want to be consistent with projection and back-projection: Use matrix for both or not at all.</p>
+</blockquote>
 
 
                 <hr>
@@ -206,10 +254,10 @@
 
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2017/03/18/kinect-coordinate-mapping-summary-and-pitfalls/" data-toggle="tooltip" data-placement="top" title="Kinect Coordinate Mapping: Summary and Pitfalls">&larr; Previous Post</a>
-                        </li>
                     
+                        <li class="next">
+                            <a href="/2017/03/16/hello-world/" data-toggle="tooltip" data-placement="top" title="Hello World">Next Post &rarr;</a>
+                        </li>
                     
                 </ul>
 
@@ -235,6 +283,14 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
+                          <a class="tag" href="/tags/#Computer Graphics" title="Computer Graphics">Computer Graphics</a>
+                        
+                          <a class="tag" href="/tags/#Computer Vision" title="Computer Vision">Computer Vision</a>
+                        
+                          <a class="tag" href="/tags/#Kinect" title="Kinect">Kinect</a>
+                        
+                          <a class="tag" href="/tags/#Programming" title="Programming">Programming</a>
+                        
                     </div>
                 </section>
                 
