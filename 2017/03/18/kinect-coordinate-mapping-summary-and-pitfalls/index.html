@@ -95,7 +95,7 @@
 <meta property="og:description" content="I’m using Microsoft Kinect for some face tracking applications, and coordinate mapping is often inevitable. However, I found that the official document is quite simple and confusing. Here I will summa">
 <meta property="og:image" content="https://i-msdn.sec.s-msft.com/dynimg/IC757720.png">
 <meta property="og:image" content="http://on02twadg.bkt.clouddn.com/kinect-api-coord-conv.svg">
-<meta property="og:updated_time" content="2017-03-21T15:11:57.867Z">
+<meta property="og:updated_time" content="2017-04-08T03:16:28.953Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kinect Coordinate Mapping: Summary and Pitfalls">
 <meta name="twitter:description" content="I’m using Microsoft Kinect for some face tracking applications, and coordinate mapping is often inevitable. However, I found that the official document is quite simple and confusing. Here I will summa">
@@ -213,26 +213,6 @@
         </li>
       
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            Categories
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            About
-          </a>
-        </li>
-      
-        
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
@@ -249,6 +229,26 @@
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
           </a>
         </li>
       
@@ -359,7 +359,8 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2017/03/18/kinect-coordinate-mapping-summary-and-pitfalls/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/18/kinect-coordinate-mapping-summary-and-pitfalls/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/03/18/kinect-coordinate-mapping-summary-and-pitfalls/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -519,6 +520,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/04/08/set-up-kcptun/" rel="prev" title="使用 kcptun 加速 Shadowsocks">
+                使用 kcptun 加速 Shadowsocks <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -546,7 +551,7 @@
       <div id="disqus_thread">
         <noscript>
           Please enable JavaScript to view the
-          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
         </noscript>
       </div>
     
@@ -596,7 +601,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -607,7 +612,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -618,7 +623,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -770,6 +775,8 @@
 
 
 
+
+
   
   <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
 
@@ -817,44 +824,50 @@
   
 
 
-
   
 
-    <script type="text/javascript">
-      var disqus_shortname = 'elonliu';
-      var disqus_identifier = '2017/03/18/kinect-coordinate-mapping-summary-and-pitfalls/';
+    
+      <script id="dsq-count-scr" src="https://elonliu.disqus.com/count.js" async></script>
+    
 
-      var disqus_title = "Kinect Coordinate Mapping: Summary and Pitfalls";
-
-
-      function run_disqus_script(disqus_script) {
-        var dsq = document.createElement('script');
-        dsq.type = 'text/javascript';
-        dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      }
-
-      run_disqus_script('count.js');
-
-      
+    
+      <script type="text/javascript">
         var disqus_config = function () {
-            this.page.url = disqus_url;
-            this.page.identifier = disqus_identifier;
-            this.page.title = disqus_title;
+          this.page.url = 'http://blog.elonliu.com/2017/03/18/kinect-coordinate-mapping-summary-and-pitfalls/';
+          this.page.identifier = '2017/03/18/kinect-coordinate-mapping-summary-and-pitfalls/';
+          this.page.title = 'Kinect Coordinate Mapping: Summary and Pitfalls';
         };
-        run_disqus_script('embed.js');
-      
+        var d = document, s = d.createElement('script');
+        s.src = 'https://elonliu.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
 
-    </script>
+  
+
+
+
+
+	
+
+
+
+
+
   
 
 
 
 
 
+  
 
 
+
+
+
+  
 
 
 
